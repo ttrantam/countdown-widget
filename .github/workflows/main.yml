@@ -19,40 +19,46 @@ jobs:
           node-version: 20
 
       # BƯỚC QUAN TRỌNG: Ghi đè file config của User bằng Config chuẩn của Platform
-      # - name: Override Vite Config
-      #   run: |
-      #     cat <<EOF > vite.config.ts
-      #     import { defineConfig } from "vite";
-      #     import react from "@vitejs/plugin-react";
-      #     import { viteSingleFile } from "vite-plugin-singlefile";
-      #     import { viteStaticCopy } from "vite-plugin-static-copy";
+      - name: Override Vite Config
+        run: |
+          cat <<EOF > vite.config.ts
+          import { defineConfig } from "vite";
+          import react from "@vitejs/plugin-react";
+          import { viteSingleFile } from "vite-plugin-singlefile";
+          import { viteStaticCopy } from "vite-plugin-static-copy";
 
-      #     // Plugin chặn ảnh của bạn
-      #     function forbidImagesPlugin() {
-      #       return {
-      #         name: "forbid-images",
-      #         enforce: "pre",
-      #         resolveId(source: string) {
-      #           if (/\.(png|jpe?g)$/i.test(source)) {
-      #             throw new Error("❌ Image files are not allowed");
-      #           }
-      #           return null;
-      #         },
-      #       };
-      #     }
+          import type { Plugin } from "vite";
 
-      #     export default defineConfig({
-      #       publicDir: false,
-      #       plugins: [
-      #         react(),
-      #         viteSingleFile(),
-      #         forbidImagesPlugin(),
-      #         viteStaticCopy({
-      #           targets: [{ src: "src/config/widget-config.json", dest: "." }],
-      #         }),
-      #       ],
-      #     });
-      #     EOF
+          function forbidImagesPlugin(): Plugin {
+            return {
+              name: "forbid-images",
+              enforce: "pre",
+              resolveId(source: string) {
+                if (/\.(png|jpe?g)$/i.test(source)) {
+                  throw new Error(`❌ Image files are not allowed: ${source}`);
+                }
+                return null;
+              },
+            };
+          }
+
+          export default defineConfig({
+            publicDir: false,
+            plugins: [
+              react(),
+              viteSingleFile(),
+              forbidImagesPlugin(),
+              viteStaticCopy({
+                targets: [
+                  {
+                    src: "src/config/widget-config.json",
+                    dest: ".",
+                  },
+                ],
+              }),
+            ],
+          });
+          EOF
 
       - name: Install dependencies
         run: npm install
