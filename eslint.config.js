@@ -19,5 +19,19 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [],
+          patterns: [
+            {
+              group: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.webp', '**/*.gif'],
+              message: '❌ Binary image files (.png/.jpg/...) are not allowed. Use SVG or external URLs instead.',
+            },
+          ],
+        },
+      ],
+    },
   },
 ])
