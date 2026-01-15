@@ -9,7 +9,7 @@ function forbidImagesPlugin(): Plugin {
   return {
     name: "forbid-images",
     enforce: "pre",
-    resolveId(source) {
+    resolveId(source: string) {
       if (/\.(png|jpe?g)$/i.test(source)) {
         throw new Error(`❌ Image files are not allowed: ${source}`);
       }
