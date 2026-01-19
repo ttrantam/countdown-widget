@@ -1,10 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { createWidget } from "@joymath/widget-sdk";
+import { widgetDefinition } from "./definition";
+import { WidgetComponent } from "./components/WidgetComponent";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+createWidget({
+  definition: widgetDefinition,
+  component: WidgetComponent,
+});
